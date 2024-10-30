@@ -1,4 +1,13 @@
 spring:
+  application:
+    name: pigeon
   data:
     mongodb:
-      uri: mongodb+srv://kholoudsanak:Actionaction1@@cluster0.mongodb.net/demo?retryWrites=true&w=majority
+      host: localhost
+      port: 27017
+      database: PigeonSkyRace
+      # Uncomment and set these if MongoDB requires authentication
+      # username: your_username
+      # password: your_password
+  server:
+        port: 8081
