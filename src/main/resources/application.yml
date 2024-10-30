@@ -1,0 +1,4 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://kholoudsanak:Actionaction1@@cluster0.mongodb.net/demo?retryWrites=true&w=majority
