@@ -3,6 +3,7 @@ package race.pigeon.entities.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,6 +16,7 @@ import java.util.List;
 public class Loft {
     @Id
     private String id;
+    @Indexed(unique = true)
     private String name;
     private double latitude;
     private double longitude;

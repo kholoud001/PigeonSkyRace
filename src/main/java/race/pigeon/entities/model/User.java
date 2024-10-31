@@ -12,9 +12,10 @@ import race.pigeon.entities.enums.Role;
 public abstract class User {
 
     @Id
-    protected int id;
+    protected String id;
     protected String name;
-    protected String email;
+    protected String password;
+
     protected Role role;
 
     public User(){}
