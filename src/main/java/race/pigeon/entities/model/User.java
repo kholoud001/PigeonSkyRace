@@ -4,18 +4,18 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import race.pigeon.entities.enums.Role;
 
 @Setter
 @Getter
 @Document(collection = "users")
-public class User {
+public abstract class User {
 
     @Id
-    private int id;
-    private String name;
-    private String email;
-    private String role;
-
+    protected int id;
+    protected String name;
+    protected String email;
+    protected Role role;
 
     public User(){}
 
