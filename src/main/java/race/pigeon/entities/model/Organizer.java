@@ -25,7 +25,7 @@ public class Organizer extends User {
         return "Organizer{" +
                 "id=" + getId() +
                 ", name='" + getName() + '\'' +
-                ", email='" + getEmail() + '\'' +
+                ", password='" + getPassword() + '\'' +
                 ", role='" + getRole() + '\'' +
                 ", competitions='" + getCompetitions() + '\'' +
 

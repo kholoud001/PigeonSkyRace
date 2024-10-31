@@ -26,7 +26,7 @@ public class Breeder extends User{
         return "Breeder{" +
                 "id=" + getId() +
                 ", name='" + getName() + '\'' +
-                ", email='" + getEmail() + '\'' +
+                ", password='" + getPassword() + '\'' +
                 ", role='" + getRole() + '\'' +
                 ", loft=" + loft +
                 '}';
