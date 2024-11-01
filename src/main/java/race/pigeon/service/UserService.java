@@ -1,7 +1,10 @@
 package race.pigeon.service;
 
-import race.pigeon.entities.model.User;
+import race.pigeon.model.entity.User;
 
 public interface UserService {
-     User saveUser(User user);
+
+    User addUser(User user);
+
+    String verify(String username, String password);
 }

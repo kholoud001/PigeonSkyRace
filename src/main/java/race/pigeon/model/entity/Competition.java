@@ -1,4 +1,4 @@
-package race.pigeon.entities.model;
+package race.pigeon.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -28,9 +28,6 @@ public class Competition {
 
     @DBRef
     private List<Pigeon> pigeons;
-
-    @DBRef
-    private Organizer organizer;
 
 
     public Competition(){}
