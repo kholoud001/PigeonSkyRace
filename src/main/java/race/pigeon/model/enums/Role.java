@@ -1,4 +1,4 @@
-package race.pigeon.entities.enums;
+package race.pigeon.model.enums;
 
 public enum Role {
     Breeder, Organizer

@@ -1,4 +1,4 @@
-package race.pigeon.entities.model;
+package race.pigeon.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,15 +15,17 @@ import java.util.List;
 public class Pigeon {
     @Id
     private String id;
+
     @Indexed(unique = true)
     private String ringNumber;
+
     private String sex;
     private int age;
     private String color;
     private String image;
 
     @DBRef
-    private Loft loft;
+    private User user;
 
     @DBRef
     private List<Competition> competition;
@@ -39,8 +41,8 @@ public class Pigeon {
                 ", age=" + age +
                 ", color='" + color + '\'' +
                 ", image='" + image + '\'' +
-                ", loft='" + loft + '\'' +
-                ", competition='" + competition + '\'' +
+                ", breeder=" + user +
+                ", competition=" + competition +
                 '}';
     }
 }

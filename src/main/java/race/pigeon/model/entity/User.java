@@ -1,4 +1,4 @@
-package race.pigeon.entities.model;
+package race.pigeon.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -6,40 +6,49 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import race.pigeon.model.enums.Role;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Setter
 @Getter
-@Document(collection = "lofts")
-public class Loft {
+@Document(collection = "users")
+public class User {
+
     @Id
-    private String id;
+    protected String id;
+
     @Indexed(unique = true)
-    private String name;
+    protected String username;
+
+    protected String password;
+
+    @Indexed(unique = true)
+    private String loftName;
+
     private double latitude;
     private double longitude;
+
+    private Role role;
 
     @DBRef
     private List<Pigeon> pigeons;
 
-    @DBRef
-    private Breeder breeder;
-
-
-    public Loft() {}
+    public User(){}
 
     @Override
     public String toString() {
-        return "Loft{" +
+        return "User{" +
                 "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", loftName='" + loftName + '\'' +
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", pigeons=" + pigeons +
-                ", breeder=" + breeder +
+                ", role=" + role +
                 '}';
     }
+
 
 }
