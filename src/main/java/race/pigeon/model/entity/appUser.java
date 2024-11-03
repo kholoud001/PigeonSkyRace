@@ -13,15 +13,15 @@ import java.util.List;
 @Setter
 @Getter
 @Document(collection = "users")
-public class User {
+public class appUser {
 
     @Id
-    protected String id;
+    private String id;
 
     @Indexed(unique = true)
-    protected String username;
+    private String username;
 
-    protected String password;
+    private String password;
 
     @Indexed(unique = true)
     private String loftName;
@@ -34,7 +34,7 @@ public class User {
     @DBRef
     private List<Pigeon> pigeons;
 
-    public User(){}
+    public appUser(){}
 
     @Override
     public String toString() {
