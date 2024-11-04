@@ -108,6 +108,9 @@ public class AuthController {
         var bCryptEncoder = new BCryptPasswordEncoder();
         appUser appUser = new appUser();
         appUser.setUsername(registerDto.getUsername());
+        appUser.setLoftName(registerDto.getLoftName());
+        appUser.setLatitude(registerDto.getLatitude());
+        appUser.setLongitude(registerDto.getLongitude());
         appUser.setRole(Role.Breeder);
         appUser.setPassword(bCryptEncoder.encode(registerDto.getPassword()));
 
