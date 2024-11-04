@@ -25,7 +25,7 @@ public class Pigeon {
     private String image;
 
     @DBRef
-    private User user;
+    private appUser user;
 
     @DBRef
     private List<Competition> competition;
