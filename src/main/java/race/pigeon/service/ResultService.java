@@ -7,9 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 import race.pigeon.model.entity.Competition;
 import race.pigeon.model.entity.Pigeon;
 import race.pigeon.model.entity.Result;
+import race.pigeon.model.entity.appUser;
 import race.pigeon.repository.CompetitionRepository;
 import race.pigeon.repository.PigeonRepository;
 import race.pigeon.repository.ResultRepository;
+import race.pigeon.util.GeoUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -106,6 +108,21 @@ public class ResultService {
         }
     }
 
+
+    public Result calculateAndSaveDistance(Competition competition, appUser user, Pigeon pigeon) {
+        double distance = GeoUtils.calculateDistance(
+                competition.getLatitude(), competition.getLongitude(),
+                user.getLatitude(), user.getLongitude()
+        );
+
+        Result result = new Result();
+        result.setDistance(distance);
+        result.setCompetition(competition);
+        result.setPigeon(pigeon);
+        result.setHeureArrivee(new Date());
+
+        return resultatRepository.save(result);
+    }
 
 
     private final Path rootLocation = Paths.get("file-storage");
