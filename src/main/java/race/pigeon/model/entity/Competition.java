@@ -29,6 +29,8 @@ public class Competition {
     @DBRef
     private List<Pigeon> pigeons;
 
+    @DBRef
+    private appUser user;
 
     public Competition(){}
 
