@@ -2,6 +2,15 @@
 spring:
   application:
     name: pigeon
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+#  mvc:
+#    hidden method:
+#      filter:
+#        enabled: true
   data:
     mongodb:
       host: localhost
@@ -15,6 +24,11 @@ spring:
 server:
   port: 8080
 
+
+#  web:
+#    resources:
+#      add-mappings: false
+
 # Logging configuration
 logging:
   level:
@@ -27,4 +41,4 @@ logging:
 security:
   jwt:
     secret-key: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007a
-    issuer: Book Store API
+    issuer: Pigeons Race API

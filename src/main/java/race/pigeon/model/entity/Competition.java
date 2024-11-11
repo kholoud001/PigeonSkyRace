@@ -20,7 +20,7 @@ public class Competition {
     private double latitude;
     private double longitude;
     private LocalDate departureTime;
-    private double distance;
+    //private double distance;
     private int pigeonCount;
     private int percentage;
     private boolean status;
