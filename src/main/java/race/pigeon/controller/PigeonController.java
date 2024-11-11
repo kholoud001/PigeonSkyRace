@@ -43,6 +43,9 @@ public class PigeonController {
         return new ResponseEntity<>(savedPigeon, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public String home() { return "Home page"; }
+    @GetMapping("/all")
+    public ResponseEntity<List<Pigeon>> getAllPigeons() {
+        List<Pigeon> pigeons = pigeonService.getAllPigeons();
+        return new ResponseEntity<>(pigeons, HttpStatus.OK);
+    }
 }

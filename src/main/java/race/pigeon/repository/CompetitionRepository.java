@@ -7,5 +7,5 @@ import race.pigeon.model.entity.Pigeon;
 
 @Repository
 public interface CompetitionRepository extends MongoRepository<Competition, Integer> {
-
+    Competition findById(String id);
 }

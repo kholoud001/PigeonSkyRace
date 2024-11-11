@@ -14,4 +14,8 @@ public class CompetitionService {
     public Competition addCompetition(Competition competition) {
         return competitionRepository.save(competition);
     }
+
+    public Competition findById(String id){
+        return competitionRepository.findById(id);
+    }
 }
