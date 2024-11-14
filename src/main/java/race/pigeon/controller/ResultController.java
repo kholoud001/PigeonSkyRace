@@ -11,10 +11,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import race.pigeon.model.entity.Competition;
+import race.pigeon.model.entity.Pigeon;
 import race.pigeon.model.entity.Result;
 import race.pigeon.model.entity.appUser;
+import race.pigeon.model.enums.Role;
 import race.pigeon.repository.AppUserRepository;
+import race.pigeon.service.CompetitionService;
+import race.pigeon.service.PigeonService;
 import race.pigeon.service.ResultService;
+import race.pigeon.service.UserService;
 import race.pigeon.util.CsvParserUtil;
 
 import java.nio.file.Path;
@@ -29,6 +35,16 @@ public class ResultController {
 
     @Autowired
     private AppUserRepository appUserRepository;
+
+    @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PigeonService pigeonService;
+
 
     private final Path rootLocation;
 
@@ -72,7 +88,6 @@ public class ResultController {
 
 
     @CrossOrigin(origins = "*")
-
     @PostMapping("/do")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
                                    RedirectAttributes redirectAttributes) {
@@ -94,6 +109,43 @@ public class ResultController {
             List<Result> resultats = resultService.getAllResultats();
             return new ResponseEntity<>(resultats, HttpStatus.OK);
         }
+
+
+    /**
+     * Endpoint pour calculer et sauvegarder la distance entre un point de départ (compétition)
+     * et le loft de l'utilisateur actuellement connecté.
+     *
+     * @param competitionId ID de la compétition
+     * @param pigeonId ID du pigeon pour lequel la distance est calculée
+     * @return Le résultat contenant la distance calculée
+     */
+    @PostMapping("/calculate-distance")
+    public ResponseEntity<Result> calculateAndSaveDistance(
+            @RequestParam String competitionId,
+            @RequestParam String pigeonId) {
+
+        // Retrieve the currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        appUser user = userService.findByUsername(currentUsername);
+
+        // Check if the user exists and has an authorized role
+        if (user == null || user.getRole() != Role.Breeder) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        // Retrieve the competition and pigeon using the services
+        Competition competition = competitionService.findById(competitionId);
+        Pigeon pigeon = pigeonService.findById(pigeonId);
+
+        // Calculate and save the distance in the result
+        Result result = resultService.calculateAndUpdateDistance(competition, user, pigeon);
+
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+
+
+
+}
 
 

@@ -25,4 +25,8 @@ public class UserService implements UserDetailsService{
         }
         return null;
     }
+
+    public appUser findByUsername(String username) {
+        return appUserRepository.findByUsername(username);
+    }
 }

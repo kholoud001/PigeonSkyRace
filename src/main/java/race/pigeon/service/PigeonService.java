@@ -6,6 +6,7 @@ import race.pigeon.model.entity.Pigeon;
 import race.pigeon.repository.PigeonRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PigeonService{
@@ -24,4 +25,10 @@ public class PigeonService{
     public List<Pigeon> findByRingNumbers(List<String> ringNumbers) {
         return pigeonRepository.findByRingNumberIn(ringNumbers);
     }
+
+    public Pigeon findById(String id) {
+        Optional<Pigeon> pigeon = pigeonRepository.findById(id);
+        return pigeon.orElse(null);
+    }
+
 }

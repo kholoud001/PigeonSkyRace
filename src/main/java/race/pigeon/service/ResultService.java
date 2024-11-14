@@ -7,9 +7,11 @@ import org.springframework.web.multipart.MultipartFile;
 import race.pigeon.model.entity.Competition;
 import race.pigeon.model.entity.Pigeon;
 import race.pigeon.model.entity.Result;
+import race.pigeon.model.entity.appUser;
 import race.pigeon.repository.CompetitionRepository;
 import race.pigeon.repository.PigeonRepository;
 import race.pigeon.repository.ResultRepository;
+import race.pigeon.util.GeoUtils;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -23,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ResultService {
@@ -104,6 +107,35 @@ public class ResultService {
             // Handle any exceptions (e.g., file reading issues, database errors)
             throw new Exception("Error processing the CSV file: " + e.getMessage(), e);
         }
+    }
+
+
+    public Result calculateAndUpdateDistance(Competition competition, appUser user, Pigeon pigeon) {
+        Optional<Result> existingResult = resultatRepository.findByCompetitionAndPigeon(competition, pigeon);
+
+        // Calculate the new distance
+        double distance = GeoUtils.calculateDistance(
+                competition.getLatitude(), competition.getLongitude(),
+                user.getLatitude(), user.getLongitude()
+        );
+
+        Result result;
+        if (existingResult.isPresent()) {
+            // Update the existing result
+            result = existingResult.get();
+            result.setDistance(distance);
+            result.setHeureArrivee(new Date());
+        } else {
+            // If no existing result, create a new one
+            result = new Result();
+            result.setCompetition(competition);
+            result.setPigeon(pigeon);
+            result.setDistance(distance);
+            result.setHeureArrivee(new Date());
+        }
+
+        // Save the result (update if exists, create if new)
+        return resultatRepository.save(result);
     }
 
 
