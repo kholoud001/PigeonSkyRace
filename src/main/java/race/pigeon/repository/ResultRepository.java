@@ -7,10 +7,12 @@ import race.pigeon.model.entity.Competition;
 import race.pigeon.model.entity.Pigeon;
 import race.pigeon.model.entity.Result;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ResultRepository extends MongoRepository<Result, String> {
     Optional<Result> findByCompetitionAndPigeon(Competition competition, Pigeon pigeon);
 
+    List<Result> findByCompetition(Competition competition);
 }

@@ -2,6 +2,7 @@ package race.pigeon.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+import race.pigeon.model.entity.Competition;
 import race.pigeon.model.entity.Pigeon;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public interface PigeonRepository extends MongoRepository<Pigeon, String> {
 
 
     Optional<Pigeon> findByRingNumber(String ringNumber);
+    List<Pigeon> findByCompetition(Competition competition);
+
 }
