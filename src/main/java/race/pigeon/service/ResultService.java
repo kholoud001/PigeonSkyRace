@@ -23,6 +23,9 @@ import java.io.InputStream;
 import java.nio.file.StandardCopyOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +43,10 @@ public class ResultService {
 
 
 
+
     public void uploadData(MultipartFile file, String competitionId) throws Exception {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
         try (Reader reader = new InputStreamReader(file.getInputStream())) {
             // Create a CSVReader to read the content of the CSV file
             CSVReader csvReader = new CSVReader(reader);
@@ -56,7 +62,6 @@ public class ResultService {
                 System.err.println("Competition not found with ID: " + competitionId);
                 return; // Skip processing further if competition is not found
             }
-
 
             // Process each row in the CSV file
             for (String[] row : rows) {
@@ -78,11 +83,11 @@ public class ResultService {
                     continue; // Skip this row if parsing fails
                 }
 
-                // Parse the arrival time (assuming it's in a proper format like 'yyyy-MM-dd HH:mm:ss')
-                Date heureArrivee = null;
+                // Parse the arrival time (assuming it's in the format 'yyyy-MM-dd HH:mm:ss')
+                LocalDateTime heureArrivee;
                 try {
-                    heureArrivee = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(heureArriveeString);
-                } catch (ParseException e) {
+                    heureArrivee = LocalDateTime.parse(heureArriveeString, formatter);
+                } catch (Exception e) {
                     System.err.println("Invalid date format in row for ring number " + ringNumber);
                     continue; // Skip this row if parsing fails
                 }
@@ -93,7 +98,7 @@ public class ResultService {
 
                 // Create and populate the Result entity
                 Result result = new Result();
-                result.setHeureArrivee(heureArrivee);
+                result.setHeureArrivee(heureArrivee); // Set heureArrivee as LocalDateTime
                 result.setDistance(distance);
                 result.setVitesse(vitesse);
                 result.setPoint(point);
@@ -110,10 +115,10 @@ public class ResultService {
     }
 
 
+
     public Result calculateAndUpdateDistance(Competition competition, appUser user, Pigeon pigeon) {
         Optional<Result> existingResult = resultatRepository.findByCompetitionAndPigeon(competition, pigeon);
 
-        // Calculate the new distance
         double distance = GeoUtils.calculateDistance(
                 competition.getLatitude(), competition.getLongitude(),
                 user.getLatitude(), user.getLongitude()
@@ -121,22 +126,42 @@ public class ResultService {
 
         Result result;
         if (existingResult.isPresent()) {
-            // Update the existing result
             result = existingResult.get();
             result.setDistance(distance);
-            result.setHeureArrivee(new Date());
+            result.setHeureArrivee(LocalDateTime.now());
         } else {
-            // If no existing result, create a new one
             result = new Result();
             result.setCompetition(competition);
             result.setPigeon(pigeon);
             result.setDistance(distance);
-            result.setHeureArrivee(new Date());
+            result.setHeureArrivee(LocalDateTime.now());
         }
 
-        // Save the result (update if exists, create if new)
         return resultatRepository.save(result);
     }
+
+
+
+    public String calculateFlightTime(Result result) {
+        Competition competition = result.getCompetition();
+        LocalDateTime departureTime = competition.getDepartureTime();
+        LocalDateTime arrivalTime = result.getHeureArrivee();
+
+        if (departureTime == null || arrivalTime == null) {
+            return "Departure or arrival time is not available.";
+        }
+
+        Duration duration = Duration.between(departureTime, arrivalTime);
+
+        // Format hours, minutes, and seconds
+        long hours = duration.toHours();
+        long minutes = duration.toMinutes() % 60;
+        long seconds = duration.getSeconds() % 60;
+
+        return String.format("%d hours, %d minutes, %d seconds", hours, minutes, seconds);
+    }
+
+
 
 
 
@@ -185,5 +210,9 @@ public class ResultService {
 
     public List<Result> getAllResultats() {
         return resultatRepository.findAll();
+    }
+
+    public Optional<Result> findByCompetitionAndPigeon(Competition competition, Pigeon pigeon){
+        return resultatRepository.findByCompetitionAndPigeon(competition, pigeon);
     }
 }

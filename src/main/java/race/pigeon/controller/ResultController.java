@@ -25,6 +25,7 @@ import race.pigeon.util.CsvParserUtil;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/results")
@@ -144,6 +145,48 @@ public class ResultController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+
+  
+    @GetMapping("/calculate-flight-time")
+    public ResponseEntity<String> calculateFlightTime(
+            @RequestParam String competitionId,
+            @RequestParam String pigeonId) {
+
+        // Retrieve the currently authenticated user
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        appUser user = userService.findByUsername(currentUsername);
+
+        // Check if the user exists and has the authorized role
+        if (user == null || user.getRole() != Role.Breeder) {
+            return ResponseEntity.status(403).body("Forbidden");
+        }
+
+        // Ensure the pigeonId does not have extra newline characters
+        pigeonId = pigeonId.trim();
+
+        // Find the Competition and Pigeon entities by their IDs
+        Competition competition = competitionService.findById(competitionId);
+        Pigeon pigeon = pigeonService.findById(pigeonId);
+
+        // If the competition or pigeon is not found, return a 404 response
+        if (competition == null || pigeon == null) {
+            return ResponseEntity.status(404).body("Competition or Pigeon not found.");
+        }
+
+        // Find the result by competition and pigeon
+        Optional<Result> resultOptional = resultService.findByCompetitionAndPigeon(competition, pigeon);
+        if (resultOptional.isEmpty()) {
+            return ResponseEntity.status(404).body("Result not found for the given competition and pigeon.");
+        }
+
+        Result result = resultOptional.get();
+
+        // Calculate the flight time
+        String flightTime = resultService.calculateFlightTime(result);
+
+        return ResponseEntity.ok(flightTime);
+    }
 
 
 }

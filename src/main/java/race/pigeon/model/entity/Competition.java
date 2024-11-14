@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.time.LocalDate;
 
@@ -19,8 +20,7 @@ public class Competition {
     private String name;
     private double latitude;
     private double longitude;
-    private LocalDate departureTime;
-    //private double distance;
+    private LocalDateTime departureTime;
     private int pigeonCount;
     private int percentage;
     private boolean status;
