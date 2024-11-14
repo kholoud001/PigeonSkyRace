@@ -139,7 +139,7 @@ public class ResultController {
         Pigeon pigeon = pigeonService.findById(pigeonId);
 
         // Calculate and save the distance in the result
-        Result result = resultService.calculateAndSaveDistance(competition, user, pigeon);
+        Result result = resultService.calculateAndUpdateDistance(competition, user, pigeon);
 
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }

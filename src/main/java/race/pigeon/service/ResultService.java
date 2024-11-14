@@ -25,6 +25,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ResultService {
@@ -109,20 +110,34 @@ public class ResultService {
     }
 
 
-    public Result calculateAndSaveDistance(Competition competition, appUser user, Pigeon pigeon) {
+    public Result calculateAndUpdateDistance(Competition competition, appUser user, Pigeon pigeon) {
+        Optional<Result> existingResult = resultatRepository.findByCompetitionAndPigeon(competition, pigeon);
+
+        // Calculate the new distance
         double distance = GeoUtils.calculateDistance(
                 competition.getLatitude(), competition.getLongitude(),
                 user.getLatitude(), user.getLongitude()
         );
 
-        Result result = new Result();
-        result.setDistance(distance);
-        result.setCompetition(competition);
-        result.setPigeon(pigeon);
-        result.setHeureArrivee(new Date());
+        Result result;
+        if (existingResult.isPresent()) {
+            // Update the existing result
+            result = existingResult.get();
+            result.setDistance(distance);
+            result.setHeureArrivee(new Date());
+        } else {
+            // If no existing result, create a new one
+            result = new Result();
+            result.setCompetition(competition);
+            result.setPigeon(pigeon);
+            result.setDistance(distance);
+            result.setHeureArrivee(new Date());
+        }
 
+        // Save the result (update if exists, create if new)
         return resultatRepository.save(result);
     }
+
 
 
     private final Path rootLocation = Paths.get("file-storage");
