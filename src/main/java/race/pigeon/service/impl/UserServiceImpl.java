@@ -1,4 +1,4 @@
-package race.pigeon.service;
+package race.pigeon.service.impl;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import race.pigeon.repository.AppUserRepository;
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserServiceImpl implements UserDetailsService {
 
     @Autowired
     AppUserRepository appUserRepository ;

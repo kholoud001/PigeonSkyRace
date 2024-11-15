@@ -15,8 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import race.pigeon.model.entity.LoginDto;
-import race.pigeon.model.entity.RegisterDto;
+import race.pigeon.dto.LoginDto;
+import race.pigeon.dto.RegisterDto;
 import race.pigeon.model.entity.appUser;
 import race.pigeon.model.enums.Role;
 import race.pigeon.repository.AppUserRepository;

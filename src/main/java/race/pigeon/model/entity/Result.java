@@ -1,5 +1,6 @@
 package race.pigeon.model.entity;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -17,10 +18,14 @@ public class Result {
 
         @Id
         private String id;
+
+        @NotNull(message = "Arrival date cannot be null")
         private LocalDateTime heureArrivee;
+
         private double distance;
         private double vitesse;
         private double point;
+        private int ranking;
 
         @DBRef
         private Pigeon pigeon;

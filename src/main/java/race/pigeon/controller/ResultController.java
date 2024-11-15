@@ -17,12 +17,12 @@ import race.pigeon.model.entity.Result;
 import race.pigeon.model.entity.appUser;
 import race.pigeon.model.enums.Role;
 import race.pigeon.repository.AppUserRepository;
-import race.pigeon.service.CompetitionService;
-import race.pigeon.service.PigeonService;
-import race.pigeon.service.ResultService;
-import race.pigeon.service.UserService;
-import race.pigeon.util.CsvParserUtil;
+import race.pigeon.service.impl.CompetitionServiceImpl;
+import race.pigeon.service.impl.PigeonServiceImpl;
+import race.pigeon.service.impl.ResultServiceImpl;
+import race.pigeon.service.impl.UserServiceImpl;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -32,19 +32,19 @@ import java.util.Optional;
 public class ResultController {
 
     @Autowired
-    private ResultService resultService;
+    private ResultServiceImpl resultService;
 
     @Autowired
     private AppUserRepository appUserRepository;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionServiceImpl competitionService;
 
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Autowired
-    private PigeonService pigeonService;
+    private PigeonServiceImpl pigeonService;
 
 
     private final Path rootLocation;
@@ -91,7 +91,7 @@ public class ResultController {
     @CrossOrigin(origins = "*")
     @PostMapping("/do")
     public String handleFileUpload(@RequestParam("file") MultipartFile file,
-                                   RedirectAttributes redirectAttributes) {
+                                   RedirectAttributes redirectAttributes) throws IOException {
 
         resultService.store(file);
         redirectAttributes.addFlashAttribute("message",
