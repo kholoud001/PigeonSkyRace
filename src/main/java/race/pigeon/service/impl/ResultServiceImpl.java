@@ -163,16 +163,17 @@ public class ResultServiceImpl implements ResultService {
         // Save the updated result entity
         resultatRepository.save(result);
 
-        // Update rankings for the same competition
-        updateRankings(result.getCompetition());
+        // Update rankings and get the updated rank and points for this result
+        int updatedRank = updateRankings(result.getCompetition(), result);
 
-        return String.format("Speed (Vitesse) updated successfully: %.2f m/min", vitesse);
+        return String.format("Speed (Vitesse) updated successfully: %.2f m/min. Rank: %d, Points: %.2f",
+                vitesse, result.getRanking(), result.getPoint());
     }
 
     // Method to update rankings and points after all results are uploaded
-    private void updateRankings(Competition competition) {
+    private int updateRankings(Competition competition, Result updatedResult) {
         List<Result> results = resultatRepository.findByCompetition(competition);
-        results.sort((r1, r2) -> Double.compare(r2.getVitesse(), r1.getVitesse()));
+        results.sort((r1, r2) -> Double.compare(r2.getVitesse(), r1.getVitesse())); // Sort by speed in descending order
 
         int totalParticipants = results.size();
         for (int rank = 0; rank < totalParticipants; rank++) {
@@ -180,9 +181,16 @@ public class ResultServiceImpl implements ResultService {
             result.setRanking(rank + 1);
             double points = calculatePoints(rank + 1, totalParticipants);
             result.setPoint(points);
+
+            // Check if this is the updated result to return its rank
+            if (result.getId().equals(updatedResult.getId())) {
+                updatedResult.setRanking(rank + 1);
+                updatedResult.setPoint(points);
+            }
         }
 
         resultatRepository.saveAll(results);
+        return updatedResult.getRanking();
     }
 
     private double calculatePoints(int rank, int totalParticipants) {
@@ -232,6 +240,12 @@ public class ResultServiceImpl implements ResultService {
         return resultatRepository.findAll();
     }
 
+    @Override
+    public List<Result> getResultsByRank(Competition competition) {
+        return resultatRepository.findByCompetitionOrderByRankingAsc(competition);
+    }
+
+    @Override
     public Optional<Result> findByCompetitionAndPigeon(Competition competition, Pigeon pigeon) {
         return resultatRepository.findByCompetitionAndPigeon(competition, pigeon);
     }
