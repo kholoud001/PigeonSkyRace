@@ -1,6 +1,8 @@
 package race.pigeon.controller;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,8 @@ import java.util.HashMap;
 
 @RestController
 @RequestMapping("/account")
+@Tag(name = "Authentication", description = "Endpoints pour la gestion des utilisateurs et authentification")
+
 public class AuthController {
 
     @Value("${security.jwt.secret-key}")
@@ -41,6 +45,7 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Operation(summary = "Obtenir le profil de l'utilisateur connecté")
     @GetMapping("/profile")
     public ResponseEntity<Object> profile (Authentication auth) {
         var response = new HashMap<String, Object>();
@@ -51,6 +56,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Authentifier un utilisateur et générer un token JWT")
     @PostMapping("/login")
     public ResponseEntity<Object> login(
             @Valid @RequestBody LoginDto loginDto,
@@ -88,7 +94,7 @@ public class AuthController {
         }
     }
 
-
+    @Operation(summary = "Créer un compte pour un nouvel utilisateur")
     @PostMapping("/register")
     public ResponseEntity<Object> register(
             @Valid @RequestBody RegisterDto registerDto,
