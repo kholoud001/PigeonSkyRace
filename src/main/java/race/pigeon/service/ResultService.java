@@ -29,4 +29,6 @@ public interface ResultService {
     List<Result> getResultsByRank(Competition competition);
 
     Optional<Result> findByCompetitionAndPigeon(Competition competition, Pigeon pigeon);
+
+    List<Result> getResultsByCompetition(String competitionId);
 }
