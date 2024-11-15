@@ -16,6 +16,8 @@ import race.pigeon.model.enums.Role;
 import race.pigeon.repository.AppUserRepository;
 import race.pigeon.service.CompetitionService;
 import race.pigeon.service.PigeonService;
+import race.pigeon.service.impl.CompetitionServiceImpl;
+import race.pigeon.service.impl.PigeonServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
