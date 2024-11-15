@@ -13,6 +13,6 @@ import java.util.Optional;
 @Repository
 public interface ResultRepository extends MongoRepository<Result, String> {
     Optional<Result> findByCompetitionAndPigeon(Competition competition, Pigeon pigeon);
-
     List<Result> findByCompetition(Competition competition);
+    List<Result> findByCompetitionOrderByRankingAsc(Competition competition);
 }

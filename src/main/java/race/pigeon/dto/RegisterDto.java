@@ -1,4 +1,4 @@
-package race.pigeon.model.entity;
+package race.pigeon.dto;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
