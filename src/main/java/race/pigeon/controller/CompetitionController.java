@@ -1,14 +1,14 @@
 package race.pigeon.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import race.pigeon.exception.ResourceNotFoundException;
+import race.pigeon.exception.UnauthorizedAccessException;
 import race.pigeon.model.entity.Competition;
 import race.pigeon.model.entity.Pigeon;
 import race.pigeon.model.entity.appUser;
@@ -16,8 +16,6 @@ import race.pigeon.model.enums.Role;
 import race.pigeon.repository.AppUserRepository;
 import race.pigeon.service.CompetitionService;
 import race.pigeon.service.PigeonService;
-import race.pigeon.service.impl.CompetitionServiceImpl;
-import race.pigeon.service.impl.PigeonServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,27 +33,24 @@ public class CompetitionController {
     private PigeonService pigeonService;
 
     @PostMapping("/add")
-    public ResponseEntity<Competition> addCompetition(@RequestBody Competition competition) {
+    public Competition addCompetition(@RequestBody Competition competition) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
 
         appUser user = appUserRepository.findByUsername(currentUsername);
-
         if (user == null || user.getRole() != Role.Organizer) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            throw new UnauthorizedAccessException("Only organizers can add competitions.");
         }
 
         competition.setUser(user);
-
-        Competition savedCompetition = competitionService.addCompetition(competition);
-        return new ResponseEntity<>(savedCompetition, HttpStatus.CREATED);
+        return competitionService.addCompetition(competition);
     }
 
     @PostMapping("/addPigeon")
-    public ResponseEntity<Competition> addPigeonToCompetition(@RequestBody Competition competitionRequest) {
+    public Competition addPigeonToCompetition(@RequestBody Competition competitionRequest) {
         Competition existingCompetition = competitionService.findById(competitionRequest.getId());
         if (existingCompetition == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException("Competition not found with ID: " + competitionRequest.getId());
         }
 
         List<String> pigeonRingNumbers = competitionRequest.getPigeons()
@@ -71,8 +66,6 @@ public class CompetitionController {
 
         existingCompetition.getPigeons().addAll(pigeonsToAdd);
 
-        Competition updatedCompetition = competitionService.addCompetition(existingCompetition);
-        return new ResponseEntity<>(updatedCompetition, HttpStatus.OK);
+        return competitionService.addCompetition(existingCompetition);
     }
-
 }

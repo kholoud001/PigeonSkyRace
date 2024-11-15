@@ -53,7 +53,6 @@ public class ResultController {
     private final Path rootLocation;
 
 
-
     private static final Logger logger = LoggerFactory.getLogger(ResultController.class);
 
     public ResultController(Path rootLocation) {
@@ -104,15 +103,11 @@ public class ResultController {
     }
 
 
-
-
-
-
     @GetMapping("/all")
-        public ResponseEntity<List<Result>> getAllResultats() {
-            List<Result> resultats = resultService.getAllResultats();
-            return new ResponseEntity<>(resultats, HttpStatus.OK);
-        }
+    public ResponseEntity<List<Result>> getAllResultats() {
+        List<Result> resultats = resultService.getAllResultats();
+        return new ResponseEntity<>(resultats, HttpStatus.OK);
+    }
 
 
     /**
@@ -120,7 +115,7 @@ public class ResultController {
      * et le loft de l'utilisateur actuellement connecté.
      *
      * @param competitionId ID de la compétition
-     * @param pigeonId ID du pigeon pour lequel la distance est calculée
+     * @param pigeonId      ID du pigeon pour lequel la distance est calculée
      * @return Le résultat contenant la distance calculée
      */
     @PostMapping("/calculate-distance")

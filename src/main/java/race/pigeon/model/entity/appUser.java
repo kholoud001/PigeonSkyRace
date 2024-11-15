@@ -1,7 +1,6 @@
 package race.pigeon.model.entity;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -10,8 +9,9 @@ import race.pigeon.model.enums.Role;
 
 import java.util.List;
 
-@Setter
-@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 @Document(collection = "users")
 public class appUser {
 
@@ -33,8 +33,6 @@ public class appUser {
 
     @DBRef
     private List<Pigeon> pigeons;
-
-    public appUser(){}
 
     @Override
     public String toString() {

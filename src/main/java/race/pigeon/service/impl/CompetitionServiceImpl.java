@@ -18,7 +18,7 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public Competition findById(String id){
+    public Competition findById(String id) {
         return competitionRepository.findById(id);
     }
 }

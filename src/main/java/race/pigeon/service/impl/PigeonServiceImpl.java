@@ -2,6 +2,7 @@ package race.pigeon.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import race.pigeon.exception.ResourceNotFoundException;
 import race.pigeon.model.entity.Pigeon;
 import race.pigeon.repository.PigeonRepository;
 import race.pigeon.service.PigeonService;
@@ -21,7 +22,7 @@ public class PigeonServiceImpl implements PigeonService {
     }
 
     @Override
-    public List<Pigeon> getAllPigeons(){
+    public List<Pigeon> getAllPigeons() {
         return pigeonRepository.findAll();
     }
 
@@ -33,7 +34,6 @@ public class PigeonServiceImpl implements PigeonService {
     @Override
     public Pigeon findById(String id) {
         Optional<Pigeon> pigeon = pigeonRepository.findById(id);
-        return pigeon.orElse(null);
+        return pigeon.orElseThrow(() -> new ResourceNotFoundException("Pigeon not found with ID: " + id));
     }
-
 }
