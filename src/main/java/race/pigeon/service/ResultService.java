@@ -142,6 +142,40 @@ public class ResultService {
 
 
 
+
+    public String calculateVitesse(Result result) {
+        // Ensure the necessary data is available
+        if (result.getDistance() <= 0 || result.getHeureArrivee() == null || result.getCompetition().getDepartureTime() == null) {
+            return "Invalid data: Distance, arrival time, or competition departure time is missing.";
+        }
+
+        // Calculate the flight time in minutes
+        Duration flightTime = Duration.between(result.getCompetition().getDepartureTime(), result.getHeureArrivee());
+
+        // Ensure flight time is positive and not zero
+        if (flightTime.isNegative() || flightTime.isZero()) {
+            return "Invalid flight time.";
+        }
+
+        // Convert flight time to minutes (or use any unit you'd prefer)
+        double flightTimeMinutes = flightTime.toMinutes();
+
+        // Calculate the vitesse (speed) = distance / flight time
+        double vitesse = result.getDistance() / flightTimeMinutes;
+
+        // Update the Result entity with the calculated vitesse (speed)
+        result.setVitesse(vitesse);
+
+        // Save the updated result entity
+        resultatRepository.save(result);  // This stores the updated 'vitesse' in the database
+
+        // Return success message
+        return String.format("Speed (Vitesse) updated successfully: %.2f m/min", vitesse);
+    }
+
+
+
+
     public String calculateFlightTime(Result result) {
         Competition competition = result.getCompetition();
         LocalDateTime departureTime = competition.getDepartureTime();
