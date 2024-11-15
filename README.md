@@ -10,8 +10,8 @@ Ce projet est une application API développée dans le cadre d’une compétitio
 - [Règles de Calcul des Résultats](#règles-de-calcul-des-résultats)
 - [Exigences Techniques](#exigences-techniques)
 - [Installation](#installation)
-- [Usage](#usage)
-- [Tests](#tests)
+- [Documentation de l'API (Swagger UI)](##documentation-de-lapi-swagger-ui)
+
 
 ---
 
@@ -107,4 +107,21 @@ Le diagramme UML des classes représente les principales entités et leurs relat
 1. Clonez le dépôt :
    ```bash
    git clone https://github.com/kholoud001/PigeonSkyRace.git
-   
+
+
+
+## Documentation de l'API (Swagger UI)
+
+L'API est accessible via **Swagger UI** à l'adresse suivante :
+
+[Swagger UI](http://localhost:8080/swagger-ui/index.html)
+
+### Accès à la Documentation de l'API
+
+- Vous pouvez accéder à la documentation interactive de l'API en visitant l'URL ci-dessus.
+- Swagger UI vous permettra de tester les différentes API exposées par le projet, ainsi que de consulter la documentation générée automatiquement.
+
+### Authentification
+Si votre API nécessite une authentification, assurez-vous de vous connecter ou d'ajouter un token JWT valide dans l'en-tête des requêtes pour accéder aux endpoints protégés.
+
+ 

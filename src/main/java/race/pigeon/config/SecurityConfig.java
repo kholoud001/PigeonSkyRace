@@ -39,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/account/login").permitAll()
                         .requestMatchers("/account/register").permitAll()
                         .requestMatchers("/competition/add").hasAuthority("Organizer")
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Allow access to Swagger UI and API Docs
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
