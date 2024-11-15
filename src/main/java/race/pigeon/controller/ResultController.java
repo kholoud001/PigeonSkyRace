@@ -1,6 +1,8 @@
 package race.pigeon.controller;
 
 
+import com.lowagie.text.DocumentException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import race.pigeon.service.impl.CompetitionServiceImpl;
 import race.pigeon.service.impl.PigeonServiceImpl;
 import race.pigeon.service.impl.ResultServiceImpl;
 import race.pigeon.service.impl.UserServiceImpl;
+import race.pigeon.util.ExportResults;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -233,6 +236,38 @@ public class ResultController {
         Competition competition = competitionService.findById(competitionId);
         return resultService.getResultsByRank(competition);
     }
+
+    @GetMapping("/export-pdf")
+    public ResponseEntity<Void> exportResultsToPdf(@RequestParam String competitionId, HttpServletResponse response) {
+        // Fetch competition details
+        Competition competition = competitionService.findById(competitionId);
+
+        // Fetch results by competition
+        List<Result> results = resultService.getResultsByCompetition(competitionId);
+
+        if (results.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Create PDF export utility
+        ExportResults exportResults = new ExportResults(results, competition);
+
+        try {
+            // Set the response type to PDF
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "attachment; filename=results.pdf");
+
+            // Generate PDF and write to the response output stream
+            exportResults.export(response);
+
+            return ResponseEntity.ok().build();
+        } catch (DocumentException | IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+
 }
 
 
