@@ -145,8 +145,6 @@ public class ResultController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-
-  
     @GetMapping("/calculate-flight-time")
     public ResponseEntity<String> calculateFlightTime(
             @RequestParam String competitionId,
@@ -230,9 +228,11 @@ public class ResultController {
         return ResponseEntity.ok(resultMessage);
     }
 
-
-
-
+    @GetMapping("/competitionR/{competitionId}")
+    public List<Result> getResultsByCompetition(@PathVariable String competitionId) {
+        Competition competition = competitionService.findById(competitionId);
+        return resultService.getResultsByRank(competition);
+    }
 }
 
 

@@ -7,6 +7,8 @@ import race.pigeon.model.entity.Result;
 import race.pigeon.model.entity.appUser;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
 
 public interface ResultService {
     // Method to upload and process CSV data
@@ -23,4 +25,8 @@ public interface ResultService {
 
     // Store the uploaded file securely
     void store(MultipartFile file) throws IOException;
+
+    List<Result> getResultsByRank(Competition competition);
+
+    Optional<Result> findByCompetitionAndPigeon(Competition competition, Pigeon pigeon);
 }
